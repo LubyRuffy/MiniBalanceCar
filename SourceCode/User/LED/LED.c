@@ -43,3 +43,4 @@ void LED_GPIO_Config(void)
         //GPIO_SetBits(LED1_GPIO_PORT, LED1_GPIO_PIN);
         GPIO_ResetBits(LED1_GPIO_PORT, LED1_GPIO_PIN);
 }
+/*********************************************END OF FILE**********************/

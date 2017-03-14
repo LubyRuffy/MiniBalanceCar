@@ -27,6 +27,8 @@
 #include "stm32f10x_it.h"
 #include "LED.h"
 #include "USART1.h"
+#include "MOTOR.h"
+#include "ENCODER.h"
 
 /** @addtogroup STM32F10x_StdPeriph_Template
   * @{
@@ -174,6 +176,8 @@ void  TIM6_IRQHandler (void)
         {
             TIM6_count = 0;
             LED1_TOGGLE;
+            
+            printf("laft: %d\r\nright: %d\r\n",Read_Encoder(2), Read_Encoder(4));
         }
 	}
 }

@@ -362,7 +362,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD, USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Libraries\CMSIS;..\User;..\Libraries\FWlib\inc;..\User\LED;..\User\USART1;..\User\TIMER6</IncludePath>
+              <IncludePath>..\Libraries\CMSIS;..\User;..\Libraries\FWlib\inc;..\User\LED;..\User\USART1;..\User\TIMER6;..\User\MOTOR;..\User\ENCODER</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -574,6 +574,16 @@
               <FileName>TIMER6.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\TIMER6\TIMER6.c</FilePath>
+            </File>
+            <File>
+              <FileName>MOTOR.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\MOTOR\MOTOR.c</FilePath>
+            </File>
+            <File>
+              <FileName>ENCODER.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\ENCODER\ENCODER.c</FilePath>
             </File>
           </Files>
         </Group>

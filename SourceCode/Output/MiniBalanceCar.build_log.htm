@@ -9,18 +9,21 @@ Project File Date:  03/14/2017
 <h2>Output:</h2>
 Build target 'MiniBalanceCar'
 compiling main.c...
-compiling USART1.c...
-compiling stm32f10x_it.c...
 linking...
-Program Size: Code=7896 RO-data=336 RW-data=48 ZI-data=1024  
+Program Size: Code=9868 RO-data=336 RW-data=48 ZI-data=1024  
 FromELF: creating hex file...
 "..\Output\MiniBalanceCar.axf" - 0 Error(s), 0 Warning(s).
 </pre>
 </body>
 </html>
-
-compiling stm32f10x_dac.c...
-compiling stm32f10x_dbgmcu.c...
+nceCar.axf" 
+Erase Done.
+Programming Done.
+Verify OK.
+ogramming Done.
+Verify OK.
+.
+iling stm32f10x_dbgmcu.c...
 compiling stm32f10x_dma.c...
 compiling stm32f10x_exti.c...
 compiling stm32f10x_flash.c...
@@ -40,9 +43,60 @@ compiling main.c...
 compiling LED.c...
 compiling USART1.c...
 compiling stm32f10x_it.c...
-..\User\stm32f10x_it.c(157): error:  #20: identifier "BUF_RX_PID" is undefined
-                BUF_RX_PID = ch;
-..\User\stm32f10x_it.c: 0 warnings, 1 error
 compiling TIMER6.c...
-"..\Output\MiniBalanceCar.axf" - 1 Error(s), 0 Warning(s).
+compiling MOTOR.c...
+linking...
+Program Size: Code=7896 RO-data=336 RW-data=48 ZI-data=1024  
+FromELF: creating hex file...
+"..\Output\MiniBalanceCar.axf" - 0 Error(s), 0 Warning(s).
+..\User\MOTOR\MOTOR.c(42): error:  #20: identifier "macAIN1_GPIO_PIN" is undefined
+      GPIO_InitStructure.GPIO_Pin = macAIN1_GPIO_PIN; 
+..\User\MOTOR\MOTOR.c(45): error:  #20: identifier "macAIN1_GPIO_PORT" is undefined
+      GPIO_Init(macAIN1_GPIO_PORT, &GPIO_InitStructure);
+..\User\MOTOR\MOTOR.c(48): error:  #20: identifier "macAIN2_GPIO_PIN" is undefined
+      GPIO_InitStructure.GPIO_Pin = macAIN2_GPIO_PIN; 
+..\User\MOTOR\MOTOR.c(51): error:  #20: identifier "macAIN2_GPIO_PORT" is undefined
+      GPIO_Init(macAIN2_GPIO_PORT, &GPIO_InitStructure);
+..\User\MOTOR\MOTOR.c(54): error:  #20: identifier "macBIN1_GPIO_PIN" is undefined
+      GPIO_InitStructure.GPIO_Pin = macBIN1_GPIO_PIN; 
+..\User\MOTOR\MOTOR.c(57): error:  #20: identifier "macBIN1_GPIO_PORT" is undefined
+      GPIO_Init(macBIN1_GPIO_PORT, &GPIO_InitStructure);
+..\User\MOTOR\MOTOR.c(60): error:  #20: identifier "macBIN2_GPIO_PIN" is undefined
+      GPIO_InitStructure.GPIO_Pin = macBIN2_GPIO_PIN; 
+..\User\MOTOR\MOTOR.c(63): error:  #20: identifier "macBIN2_GPIO_PORT" is undefined
+      GPIO_Init(macBIN2_GPIO_PORT, &GPIO_InitStructure);
+..\User\MOTOR\MOTOR.c: 0 warnings, 15 errors
+"..\Output\MiniBalanceCar.axf" - 15 Error(s), 0 Warning(s).
+Target not created
+else{AIN1(1);AIN2(0);  LeftVoltage=-LeftVoltage;}
+..\User\MOTOR\MOTOR.c(139): error:  #20: identifier "macAIN1_GPIO_PIN" is undefined
+      if(LeftVoltage>0){AIN1(0);AIN2(1);}else{AIN1(1);AIN2(0);  LeftVoltage=-LeftVoltage;}
+..\User\MOTOR\MOTOR.c(139): error:  #20: identifier "macAIN2_GPIO_PORT" is undefined
+      if(LeftVoltage>0){AIN1(0);AIN2(1);}else{AIN1(1);AIN2(0);  LeftVoltage=-LeftVoltage;}
+..\User\MOTOR\MOTOR.c(139): error:  #20: identifier "macAIN2_GPIO_PIN" is undefined
+      if(LeftVoltage>0){AIN1(0);AIN2(1);}else{AIN1(1);AIN2(0);  LeftVoltage=-LeftVoltage;}
+..\User\MOTOR\MOTOR.c(139): error:  #20: identifier "macAIN1_GPIO_PORT" is undefined
+      if(LeftVoltage>0){AIN1(0);AIN2(1);}else{AIN1(1);AIN2(0);  LeftVoltage=-LeftVoltage;}
+..\User\MOTOR\MOTOR.c(139): error:  #20: identifier "macAIN1_GPIO_PIN" is undefined
+      if(LeftVoltage>0){AIN1(0);AIN2(1);}else{AIN1(1);AIN2(0);  LeftVoltage=-LeftVoltage;}
+..\User\MOTOR\MOTOR.c(139): error:  #20: identifier "macAIN2_GPIO_PORT" is undefined
+      if(LeftVoltage>0){AIN1(0);AIN2(1);}else{AIN1(1);AIN2(0);  LeftVoltage=-LeftVoltage;}
+..\User\MOTOR\MOTOR.c(139): error:  #20: identifier "macAIN2_GPIO_PIN" is undefined
+      if(LeftVoltage>0){AIN1(0);AIN2(1);}else{AIN1(1);AIN2(0);  LeftVoltage=-LeftVoltage;}
+..\User\MOTOR\MOTOR.c(141): error:  #20: identifier "macBIN1_GPIO_PORT" is undefined
+      if(RightVoltage>0){BIN1(1);BIN2(0);}else{BIN1(0);BIN2(1); RightVoltage=-RightVoltage;}
+..\User\MOTOR\MOTOR.c(141): error:  #20: identifier "macBIN1_GPIO_PIN" is undefined
+      if(RightVoltage>0){BIN1(1);BIN2(0);}else{BIN1(0);BIN2(1); RightVoltage=-RightVoltage;}
+..\User\MOTOR\MOTOR.c(141): error:  #20: identifier "macBIN2_GPIO_PORT" is undefined
+      if(RightVoltage>0){BIN1(1);BIN2(0);}else{BIN1(0);BIN2(1); RightVoltage=-RightVoltage;}
+..\User\MOTOR\MOTOR.c(141): error:  #20: identifier "macBIN2_GPIO_PIN" is undefined
+      if(RightVoltage>0){BIN1(1);BIN2(0);}else{BIN1(0);BIN2(1); RightVoltage=-RightVoltage;}
+..\User\MOTOR\MOTOR.c(141): error:  #20: identifier "macBIN1_GPIO_PORT" is undefined
+      if(RightVoltage>0){BIN1(1);BIN2(0);}else{BIN1(0);BIN2(1); RightVoltage=-RightVoltage;}
+..\User\MOTOR\MOTOR.c(141): error:  #20: identifier "macBIN1_GPIO_PIN" is undefined
+      if(RightVoltage>0){BIN1(1);BIN2(0);}else{BIN1(0);BIN2(1); RightVoltage=-RightVoltage;}
+..\User\MOTOR\MOTOR.c(141): error:  #20: identifier "macBIN2_GPIO_PORT" is undefined
+      if(RightVoltage>0){BIN1(1);BIN2(0);}else{BIN1(0);BIN2(1); RightVoltage=-RightVoltage;}
+..\User\MOTOR\MOTOR.c: 0 warnings, 30 errors
+"..\Output\MiniBalanceCar.axf" - 30 Error(s), 0 Warning(s).
 Target not created

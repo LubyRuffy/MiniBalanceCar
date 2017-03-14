@@ -5,7 +5,7 @@
 * @version V1.0.0
 * @date    6-Mar-2017
 * @brief   
-* @history    
+* @history 
 *
 * Copyright (c) 2017, MacroSilicon Technology Co.,Ltd.
 ******************************************************************************/
@@ -14,6 +14,8 @@
 #include "LED.h"
 #include "USART1.h"
 #include "TIMER6.h"
+#include "MOTOR.h"
+#include "ENCODER.h"
 
 /***************************************************************
 * Function name:  main()
@@ -27,12 +29,20 @@ int main(void)
 {
     LED_GPIO_Config();
     USART1_Config();
-    TIMER6_Config();
+    Motor_GPIO_Config();
+    Motor_PWM_Config();
     
+    Encoder_Init_TIM2();            //=====±àÂëÆ÷½Ó¿Ú
+    Encoder_Init_TIM4();
+    
+    
+    TIMER6_Config();
     LED1_ON;
     
     printf("Holle Car !\r\n");
     
+    Motor_driver_out(0.2, 0.2);
+    STBY(1);
     while(1);
 }
 
