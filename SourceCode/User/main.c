@@ -16,6 +16,9 @@
 #include "TIMER6.h"
 #include "MOTOR.h"
 #include "ENCODER.h"
+#include "I2C.h"
+#include "MPU6050.h"
+
 
 /***************************************************************
 * Function name:  main()
@@ -26,7 +29,7 @@
 * Remark:    
 ***************************************************************/
 int main(void)
-{
+{   
     LED_GPIO_Config();
     USART1_Config();
     Motor_GPIO_Config();
@@ -35,14 +38,13 @@ int main(void)
     Encoder_Init_TIM2();            //=====±àÂëÆ÷½Ó¿Ú
     Encoder_Init_TIM4();
     
+    I2C_GPIO_Config();
+    I2C_Mode_Config();
+    MPU6050_Init();
+    
     
     TIMER6_Config();
-    LED1_ON;
     
-    printf("Holle Car !\r\n");
-    
-    Motor_driver_out(0.2, 0.2);
-    STBY(1);
     while(1);
 }
 

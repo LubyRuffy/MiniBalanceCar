@@ -29,6 +29,7 @@
 #include "USART1.h"
 #include "MOTOR.h"
 #include "ENCODER.h"
+#include "MPU6050.h"
 
 /** @addtogroup STM32F10x_StdPeriph_Template
   * @{
@@ -163,10 +164,13 @@ void USART1_IRQHandler(void)
      
 }
 
+short Acel[3];
+short Gyro[3];
+short Temp;
 void  TIM6_IRQHandler (void)
 {
     static u8 TIM6_count=0;
-
+    
     if ( TIM_GetITStatus( TIM6, TIM_IT_Update) != RESET ) 
     {	
         TIM_ClearITPendingBit(TIM6 , TIM_FLAG_Update);
@@ -177,7 +181,14 @@ void  TIM6_IRQHandler (void)
             TIM6_count = 0;
             LED1_TOGGLE;
             
-            printf("laft: %d\r\nright: %d\r\n",Read_Encoder(2), Read_Encoder(4));
+            MPU6050ReadAcc(Acel);
+            //printf("Acel£º%8d%8d%8d ",Acel[0],Acel[1],Acel[2]);
+            MPU6050ReadGyro(Gyro);
+            //printf("Gyro: %8d%8d%8d ",Gyro[0],Gyro[1],Gyro[2]);
+            MPU6050_ReturnTemp(&Temp);
+            //printf("Temp: %d\r\n",Temp);
+            
+            printf("{B%d:%d:%d:%d:%d}$",Acel[0],Acel[1],Gyro[0],Gyro[1],Temp);
         }
 	}
 }

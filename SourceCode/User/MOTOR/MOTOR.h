@@ -12,6 +12,8 @@
 #ifndef __MOTOR_H__
 #define	__MOTOR_H__
 #include "stm32f10x.h"
+
+
 #define MOTOR_OUT_MAX           0.999
 
 /* 定义Motor连接的GPIO端口 */

@@ -362,7 +362,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD, USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Libraries\CMSIS;..\User;..\Libraries\FWlib\inc;..\User\LED;..\User\USART1;..\User\TIMER6;..\User\MOTOR;..\User\ENCODER</IncludePath>
+              <IncludePath>..\Libraries\CMSIS;..\User;..\Libraries\FWlib\inc;..\User\LED;..\User\USART1;..\User\TIMER6;..\User\MOTOR;..\User\ENCODER;..\User\I2C;..\User\MPU6050</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -584,6 +584,16 @@
               <FileName>ENCODER.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\ENCODER\ENCODER.c</FilePath>
+            </File>
+            <File>
+              <FileName>I2C.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\I2C\I2C.c</FilePath>
+            </File>
+            <File>
+              <FileName>MPU6050.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\MPU6050\MPU6050.c</FilePath>
             </File>
           </Files>
         </Group>
