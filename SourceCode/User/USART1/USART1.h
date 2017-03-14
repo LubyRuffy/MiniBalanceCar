@@ -15,7 +15,7 @@
 #include <stdio.h>
 
 
-extern u8 BUF_RX_PID;
+extern u8 BUF_RX_CH;
 
 void USART1_Config( void );
 

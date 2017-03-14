@@ -297,7 +297,7 @@ I (..\Libraries\FWlib\inc\stm32f10x_usart.h)(0x58C24218)
 I (..\Libraries\FWlib\inc\misc.h)(0x58C24218)
 I (C:\Keil_v4\ARM\ARMCC\include\stdio.h)(0x51C7C554)
 I (..\User\LED\LED.h)(0x58C78E9C)
-I (..\User\USART1\USART1.h)(0x58C78EAA)
+I (..\User\USART1\USART1.h)(0x58C79F25)
 I (..\User\TIMER6\TIMER6.h)(0x58C799FF)
 F (..\User\LED\LED.c)(0x58C78AC6)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\Libraries\CMSIS -I..\User -I..\Libraries\FWlib\inc -I..\User\LED -I..\User\USART1 -I..\User\TIMER6-I C:\Keil_v4\ARM\RV31\INC-I C:\Keil_v4\ARM\CMSIS\Include-I C:\Keil_v4\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\output\led.o --omf_browse ..\output\led.crf --depend ..\output\led.d)
 I (..\User\LED\LED.h)(0x58C78E9C)
@@ -311,8 +311,8 @@ I (..\Libraries\FWlib\inc\stm32f10x_rcc.h)(0x58C24218)
 I (..\Libraries\FWlib\inc\stm32f10x_tim.h)(0x58C24218)
 I (..\Libraries\FWlib\inc\stm32f10x_usart.h)(0x58C24218)
 I (..\Libraries\FWlib\inc\misc.h)(0x58C24218)
-F (..\User\USART1\USART1.c)(0x58C79128)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\Libraries\CMSIS -I..\User -I..\Libraries\FWlib\inc -I..\User\LED -I..\User\USART1 -I..\User\TIMER6-I C:\Keil_v4\ARM\RV31\INC-I C:\Keil_v4\ARM\CMSIS\Include-I C:\Keil_v4\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\output\usart1.o --omf_browse ..\output\usart1.crf --depend ..\output\usart1.d)
-I (..\User\USART1\USART1.h)(0x58C78EAA)
+F (..\User\USART1\USART1.c)(0x58C79F26)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\Libraries\CMSIS -I..\User -I..\Libraries\FWlib\inc -I..\User\LED -I..\User\USART1 -I..\User\TIMER6-I C:\Keil_v4\ARM\RV31\INC-I C:\Keil_v4\ARM\CMSIS\Include-I C:\Keil_v4\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\output\usart1.o --omf_browse ..\output\usart1.crf --depend ..\output\usart1.d)
+I (..\User\USART1\USART1.h)(0x58C79F25)
 I (..\Libraries\CMSIS\stm32f10x.h)(0x58C24218)
 I (..\Libraries\CMSIS\core_cm3.h)(0x58C24217)
 I (C:\Keil_v4\ARM\ARMCC\include\stdint.h)(0x51C7C554)
@@ -324,7 +324,7 @@ I (..\Libraries\FWlib\inc\stm32f10x_tim.h)(0x58C24218)
 I (..\Libraries\FWlib\inc\stm32f10x_usart.h)(0x58C24218)
 I (..\Libraries\FWlib\inc\misc.h)(0x58C24218)
 I (C:\Keil_v4\ARM\ARMCC\include\stdio.h)(0x51C7C554)
-F (..\User\stm32f10x_it.c)(0x58C79B05)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\Libraries\CMSIS -I..\User -I..\Libraries\FWlib\inc -I..\User\LED -I..\User\USART1 -I..\User\TIMER6-I C:\Keil_v4\ARM\RV31\INC-I C:\Keil_v4\ARM\CMSIS\Include-I C:\Keil_v4\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\output\stm32f10x_it.o --omf_browse ..\output\stm32f10x_it.crf --depend ..\output\stm32f10x_it.d)
+F (..\User\stm32f10x_it.c)(0x58C79F1C)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\Libraries\CMSIS -I..\User -I..\Libraries\FWlib\inc -I..\User\LED -I..\User\USART1 -I..\User\TIMER6-I C:\Keil_v4\ARM\RV31\INC-I C:\Keil_v4\ARM\CMSIS\Include-I C:\Keil_v4\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\output\stm32f10x_it.o --omf_browse ..\output\stm32f10x_it.crf --depend ..\output\stm32f10x_it.d)
 I (..\User\stm32f10x_it.h)(0x58C2421A)
 I (..\Libraries\CMSIS\stm32f10x.h)(0x58C24218)
 I (..\Libraries\CMSIS\core_cm3.h)(0x58C24217)
@@ -337,6 +337,8 @@ I (..\Libraries\FWlib\inc\stm32f10x_tim.h)(0x58C24218)
 I (..\Libraries\FWlib\inc\stm32f10x_usart.h)(0x58C24218)
 I (..\Libraries\FWlib\inc\misc.h)(0x58C24218)
 I (..\User\LED\LED.h)(0x58C78E9C)
+I (..\User\USART1\USART1.h)(0x58C79F25)
+I (C:\Keil_v4\ARM\ARMCC\include\stdio.h)(0x51C7C554)
 F (..\User\TIMER6\TIMER6.c)(0x58C79ACC)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\Libraries\CMSIS -I..\User -I..\Libraries\FWlib\inc -I..\User\LED -I..\User\USART1 -I..\User\TIMER6-I C:\Keil_v4\ARM\RV31\INC-I C:\Keil_v4\ARM\CMSIS\Include-I C:\Keil_v4\ARM\Inc\ST\STM32F10x-DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\output\timer6.o --omf_browse ..\output\timer6.crf --depend ..\output\timer6.d)
 I (..\User\TIMER6\TIMER6.h)(0x58C799FF)
 I (..\Libraries\CMSIS\stm32f10x.h)(0x58C24218)

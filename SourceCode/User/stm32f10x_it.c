@@ -26,6 +26,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f10x_it.h"
 #include "LED.h"
+#include "USART1.h"
 
 /** @addtogroup STM32F10x_StdPeriph_Template
   * @{
@@ -136,7 +137,8 @@ void PendSV_Handler(void)
   * @retval None
   */
 void SysTick_Handler(void)
-{	
+{
+    
 }
 
 
@@ -146,7 +148,6 @@ void SysTick_Handler(void)
 /*  available peripheral interrupt handler's name please refer to the startup */
 /*  file (startup_stm32f10x_xx.s).                                            */
 /******************************************************************************/
-u8 BUF_RX_PID;
 void USART1_IRQHandler(void)
 {
     uint8_t ch;
@@ -155,7 +156,7 @@ void USART1_IRQHandler(void)
     { 	
         //ch = USART1->DR;
         ch = USART_ReceiveData(USART1);
-		BUF_RX_PID = ch;
+		BUF_RX_CH = ch;
     } 
      
 }
