@@ -1,0 +1,45 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+D:\STM32\平衡车\2. 调试代码\MiniBalanceCar\SourceCode\Project\MiniBalanceCar.uvproj
+Project File Date:  03/14/2017
+
+<h2>Output:</h2>
+Build target 'MiniBalanceCar'
+assembling startup_stm32f10x_hd.s...
+--- Error: failed to execute '.\ARMCC\bin\ArmAsm'
+Target not created
+Build target 'MiniBalanceCar'
+assembling startup_stm32f10x_hd.s...
+--- Error: failed to execute '.\ARMCC\bin\ArmAsm'
+Target not created
+Build target 'MiniBalanceCar'
+assembling startup_stm32f10x_hd.s...
+--- Error: failed to execute '.\ARMCC\bin\ArmAsm'
+Target not created
+Build target 'MiniBalanceCar'
+assembling startup_stm32f10x_hd.s...
+--- Error: failed to execute '.\ARMCC\bin\ArmAsm'
+Target not created
+Build target 'MiniBalanceCar'
+assembling startup_stm32f10x_hd.s...
+--- Error: failed to execute 'C:\Keil_v4\ARM\BIN\ArmAsm'
+Target not created
+Build target 'MiniBalanceCar'
+assembling startup_stm32f10x_hd.s...
+--- Error: failed to execute 'C:\Keil_v4\ARM\BIN\ArmAsm'
+Target not created
+Build target 'MiniBalanceCar'
+assembling startup_stm32f10x_hd.s...
+--- Error: failed to execute 'C:\Keil_v4\ARM\BIN\ArmAsm'
+Target not created
+Build target 'MiniBalanceCar'
+assembling startup_stm32f10x_hd.s...
+--- Error: failed to execute 'C:\Keil_v4\ARM\BIN\ArmAsm'
+Target not created
+Build target 'MiniBalanceCar'
+assembling startup_stm32f10x_hd.s...
+--- Error: failed to execute 'C:\Keil_v4\ARM\BIN\ArmAsm'
+Target not created
