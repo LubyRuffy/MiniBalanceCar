@@ -19,6 +19,7 @@ extern u8 BUF_RX_CH;
 
 void USART1_Config( void );
 
-
+//Êä³ö×Ö·û´®
+void PrintChar(char *s);
 
 #endif /* __USART1_H */

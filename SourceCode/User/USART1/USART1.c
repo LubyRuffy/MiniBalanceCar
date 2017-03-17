@@ -78,7 +78,31 @@ void USART1_Config(void)
     USART_Cmd(USART1, ENABLE);
 }
 
+void UsartSend(unsigned char DataToSend)
+{
+	//将要发送的字节写到UART1的发送缓冲区
+	 USART1->DR = (DataToSend & (uint16_t)0x01FF);
+//	USART_SendData(USART1, (unsigned char) DataToSend);
+	//等待发送完成
+  	while (!(USART1->SR & ((uint16_t)0x0080)));
+}
 
+//输出字符串
+void PrintChar(char *s)
+{
+	char *p;
+	p=s;
+	while(*p != '\0')
+	{
+		UsartSend(*p);
+		p++;
+	}
+}
+void PrintHexInt16(int16_t num)
+{
+	UsartSend((num & 0xff00) >> 8);//先发送高８位，再发送低８位
+	UsartSend((uint8_t)(num & 0x00ff));
+}
 
 /// 重定向c库函数printf到USART1
 int fputc(int ch, FILE *f)

@@ -1,48 +1,42 @@
 /**
 ******************************************************************************
-* @file    SysTick.h
+* @file    MPU6050.h
 * @author  dwu
 * @version V1.0.0
-* @date    09-Nov-2016
-* @brief   MiniBalanceCar SysTick driver define
+* @date    6-Mar-2017
+* @brief   MiniBalanceCar MPU6050 driver define
 * @history    
 *
 * Copyright (c) 2017, MacroSilicon Technology Co.,Ltd.
 ******************************************************************************/
-#ifndef __SYSTICK_H__
-#define	__SYSTICK_H__
+#ifndef __MPU6050_H__
+#define	__MPU6050_H__
 #include "stm32f10x.h"
 
+#define q30  1073741824.0f
+
+extern float Pitch,Roll,Yaw;
+extern short gyro[3], accel[3];
 
 /***************************************************************
-* Function name:  SysTick_Init()
+* Function name:  MPU6050_Init()
 * Description:     
 * Entry:          None
 *
 * Returned value: None
 * Remark:
 ***************************************************************/
-void SysTick_Init(void);
+int MPU6050_Init(void);
 
 /***************************************************************
-* Function name:  Delay_ms()
+* Function name:  MPU6050_Refresh_Pose()
 * Description:     
-* Entry:          nTime: 则实现的延时为 nTime * 1ms
+* Entry:          None
 *
 * Returned value: None
 * Remark:
 ***************************************************************/
-void Delay_ms(unsigned long nTime);
-
-/***************************************************************
-* Function name:  get_clock_ms()
-* Description:    
-* Entry:          Timestamp
-*
-* Returned value: None
-* Remark:
-***************************************************************/
-int get_clock_ms(unsigned long *count);
+void MPU6050_Refresh_Pose(void);
 
 #endif
 /*********************************************END OF FILE**********************/

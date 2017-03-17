@@ -16,9 +16,8 @@
 #include "TIMER6.h"
 #include "MOTOR.h"
 #include "ENCODER.h"
-#include "I2C.h"
 #include "SysTick.h"
-
+#include "MPU6050.h"
 
 /***************************************************************
 * Function name:  main()
@@ -38,15 +37,29 @@ int main(void)
     Encoder_Init_TIM2();            //=====编码器接口
     Encoder_Init_TIM4();
     
-    I2C_GPIO_Config();
-    I2C_Mode_Config();
-    
     /* 配置SysTick 为1ms中断一次 */
 	SysTick_Init();
+    Delay_ms(10);
     
-    TIMER6_Config();
-    
-    while(1);
+    if(MPU6050_Init())
+    {
+        printf("MPU6050_Init Error!\r\n");
+    }
+    else
+    {
+        TIMER6_Config();
+    }
+    while(1)
+    {
+        //printf("{A%d:%d:%d:%d}$",a,b,c,d); 
+        //a、b、c、d分别为需要显示的状态，
+        //a对应左边的码盘，
+        //b对应右边的码盘，通过百分比表示，可以用于速度等状态的显示，范围是0—100（%）；
+        //c主要是用于显示电量，范围也是0—100（%）；d是角度值，范围是-180°—180°
+        //printf("{A%d:%d:%d:%d}$",0,0,100,0); 
+        Delay_ms(10);
+        printf("{B%d}$",(int)(Pitch*1000));
+    }
 }
 
 

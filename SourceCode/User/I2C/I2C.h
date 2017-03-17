@@ -44,8 +44,8 @@ void I2C_GPIO_Config(void);
 ***************************************************************/
 void I2C_Mode_Config(void);
 
-void IIC_Write_Buffer(unsigned char slave_addr, unsigned char reg_addr, unsigned char length, unsigned char const *data);
-void IIC_Read_Buffer(unsigned char slave_addr, unsigned char reg_addr, unsigned char length, unsigned char *data);
+unsigned char IIC_Write_Buffer(unsigned char slave_addr, unsigned char reg_addr, unsigned char length, unsigned char const *data);
+unsigned char IIC_Read_Buffer(unsigned char slave_addr, unsigned char reg_addr, unsigned char length, unsigned char *data);
 
 #endif
 /*********************************************END OF FILE**********************/

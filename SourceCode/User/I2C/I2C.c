@@ -82,7 +82,7 @@ void I2C_Mode_Config(void)
 
 
 
-void IIC_Write_Buffer(unsigned char slave_addr, unsigned char reg_addr, unsigned char length, unsigned char const *data)
+unsigned char IIC_Write_Buffer(unsigned char slave_addr, unsigned char reg_addr, unsigned char length, unsigned char const *data)
 {
     while(I2C_GetFlagStatus(I2Cx, I2C_FLAG_BUSY)); 
 
@@ -119,9 +119,10 @@ void IIC_Write_Buffer(unsigned char slave_addr, unsigned char reg_addr, unsigned
 
     /* Send STOP condition */
     I2C_GenerateSTOP(I2Cx, ENABLE);
+    return 0;
 }
 
-void IIC_Read_Buffer(unsigned char slave_addr, unsigned char reg_addr, unsigned char length, unsigned char *data)
+unsigned char IIC_Read_Buffer(unsigned char slave_addr, unsigned char reg_addr, unsigned char length, unsigned char *data)
 {
     //*((u8 *)0x4001080c) |=0x80; 
     while(I2C_GetFlagStatus(I2Cx, I2C_FLAG_BUSY)); 
@@ -188,6 +189,7 @@ void IIC_Read_Buffer(unsigned char slave_addr, unsigned char reg_addr, unsigned 
 
     /* Enable Acknowledgement to be ready for another reception */
     I2C_AcknowledgeConfig(I2Cx, ENABLE);
+    return 0;
 }
 
 /*********************************************END OF FILE**********************/

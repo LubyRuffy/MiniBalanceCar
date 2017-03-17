@@ -29,6 +29,7 @@
 #include "USART1.h"
 #include "MOTOR.h"
 #include "ENCODER.h"
+#include "MPU6050.h"
 extern void TimingDelay_Decrement(void);
 
 /** @addtogroup STM32F10x_StdPeriph_Template
@@ -164,9 +165,6 @@ void USART1_IRQHandler(void)
      
 }
 
-short Acel[3];
-short Gyro[3];
-short Temp;
 void  TIM6_IRQHandler (void)
 {
     static u8 TIM6_count=0;
@@ -176,19 +174,12 @@ void  TIM6_IRQHandler (void)
         TIM_ClearITPendingBit(TIM6 , TIM_FLAG_Update);
         TIM6_count++;
 
-        if(TIM6_count >= 255)
+        if(TIM6_count >= 1)
         {
             TIM6_count = 0;
             LED1_TOGGLE;
+            MPU6050_Refresh_Pose();
             
-            //printf("{A%d:%d:%d:%d}$",a,b,c,d); 
-            //a、b、c、d分别为需要显示的状态，
-            //a对应左边的码盘，
-            //b对应右边的码盘，通过百分比表示，可以用于速度等状态的显示，范围是0—100（%）；
-            //c主要是用于显示电量，范围也是0—100（%）；d是角度值，范围是-180°—180°
-            printf("{A%d:%d:%d:%d}$",0,0,100,0); 
-            
-            printf("{B%d:%d:%d:%d:%d}$",Acel[0],Acel[1],Gyro[0],Gyro[1],Temp);
         }
 	}
 }
