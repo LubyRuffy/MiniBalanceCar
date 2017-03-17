@@ -17,7 +17,7 @@
 #include "MOTOR.h"
 #include "ENCODER.h"
 #include "I2C.h"
-#include "MPU6050.h"
+#include "SysTick.h"
 
 
 /***************************************************************
@@ -40,8 +40,9 @@ int main(void)
     
     I2C_GPIO_Config();
     I2C_Mode_Config();
-    MPU6050_Init();
     
+    /* 配置SysTick 为1ms中断一次 */
+	SysTick_Init();
     
     TIMER6_Config();
     

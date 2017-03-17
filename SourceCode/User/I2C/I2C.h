@@ -24,26 +24,28 @@
 #define             I2C_SDA_PORT                        GPIOB 
 #define             I2C_SDA_PIN                         GPIO_Pin_11
 
-
+/***************************************************************
+* Function name:  I2C_GPIO_Config()
+* Description:     
+* Entry:          None
+*
+* Returned value: None
+* Remark:
+***************************************************************/
 void I2C_GPIO_Config(void);
+
+/***************************************************************
+* Function name:  I2C_Mode_Config()
+* Description:     
+* Entry:          None
+*
+* Returned value: None
+* Remark:
+***************************************************************/
 void I2C_Mode_Config(void);
 
-//addr：器件slave_address
-//ReadAddr ：     从器件将要读的数据的首地址
-//NumByteToRead ：读出数据的长度
-//pBuffer ：      将要读出的数据存储位置
-void IIC_Read_Buffer(u8 ReadAddr, u8* pBuffer, u8 NumByteToRead);
+void IIC_Write_Buffer(unsigned char slave_addr, unsigned char reg_addr, unsigned char length, unsigned char const *data);
+void IIC_Read_Buffer(unsigned char slave_addr, unsigned char reg_addr, unsigned char length, unsigned char *data);
 
-/**
-  * @brief   在EEPROM的一个写循环中可以写多个字节，但一次写入的字节数
-  *          不能超过EEPROM页的大小，AT24C02每页有8个字节
-  * @param   
-  *		@arg pBuffer:缓冲区指针
-  *		@arg WriteAddr:写地址
-  *     @arg NumByteToWrite:写的字节数
-  * @retval  无
-  */
-void IIC_Write_Buffer(u8 WriteAddr, u8 NumByteToWrite, u8* pBuffer);
-void IIC_Write(u8 WriteAddr, u8 Buffer);
 #endif
 /*********************************************END OF FILE**********************/

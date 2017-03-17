@@ -29,7 +29,7 @@
 #include "USART1.h"
 #include "MOTOR.h"
 #include "ENCODER.h"
-#include "MPU6050.h"
+extern void TimingDelay_Decrement(void);
 
 /** @addtogroup STM32F10x_StdPeriph_Template
   * @{
@@ -141,7 +141,7 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-    
+    TimingDelay_Decrement();
 }
 
 
@@ -181,12 +181,12 @@ void  TIM6_IRQHandler (void)
             TIM6_count = 0;
             LED1_TOGGLE;
             
-            MPU6050ReadAcc(Acel);
-            //printf("Acel：%8d%8d%8d ",Acel[0],Acel[1],Acel[2]);
-            MPU6050ReadGyro(Gyro);
-            //printf("Gyro: %8d%8d%8d ",Gyro[0],Gyro[1],Gyro[2]);
-            MPU6050_ReturnTemp(&Temp);
-            //printf("Temp: %d\r\n",Temp);
+            //printf("{A%d:%d:%d:%d}$",a,b,c,d); 
+            //a、b、c、d分别为需要显示的状态，
+            //a对应左边的码盘，
+            //b对应右边的码盘，通过百分比表示，可以用于速度等状态的显示，范围是0—100（%）；
+            //c主要是用于显示电量，范围也是0—100（%）；d是角度值，范围是-180°—180°
+            printf("{A%d:%d:%d:%d}$",0,0,100,0); 
             
             printf("{B%d:%d:%d:%d:%d}$",Acel[0],Acel[1],Gyro[0],Gyro[1],Temp);
         }

@@ -13,9 +13,17 @@
 
 
 #define I2C_Speed               400000  
-#define I2Cx_OWN_ADDRESS7       0x0A   
-#define MPU6050_ADDRESS         0xD0
+#define I2Cx_OWN_ADDRESS7       0x0A
 
+
+/***************************************************************
+* Function name:  I2C_GPIO_Config()
+* Description:     
+* Entry:          None
+*
+* Returned value: None
+* Remark:
+***************************************************************/
 void I2C_GPIO_Config(void)
 {
     GPIO_InitTypeDef  GPIO_InitStructure; 
@@ -38,11 +46,14 @@ void I2C_GPIO_Config(void)
 }
 
 
-/**
-  * @brief  I2C 工作模式配置
-  * @param  无
-  * @retval 无
-  */
+/***************************************************************
+* Function name:  I2C_Mode_Config()
+* Description:     
+* Entry:          None
+*
+* Returned value: None
+* Remark:
+***************************************************************/
 void I2C_Mode_Config(void)
 {
   I2C_InitTypeDef  I2C_InitStructure; 
@@ -70,10 +81,47 @@ void I2C_Mode_Config(void)
 }
 
 
-//ReadAddr ：     从器件将要读的数据的首地址
-//NumByteToRead ：读出数据的长度
-//pBuffer ：      将要读出的数据存储位置
-void IIC_Read_Buffer(u8 ReadAddr, u8* pBuffer, u8 NumByteToRead)
+
+void IIC_Write_Buffer(unsigned char slave_addr, unsigned char reg_addr, unsigned char length, unsigned char const *data)
+{
+    while(I2C_GetFlagStatus(I2Cx, I2C_FLAG_BUSY)); 
+
+    /* Send START condition */
+    I2C_GenerateSTART(I2Cx, ENABLE);
+
+    /* Test on EV5 and clear it */
+    while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_MODE_SELECT)); 
+
+    /* Send EEPROM address for write */
+    I2C_Send7bitAddress(I2Cx, slave_addr, I2C_Direction_Transmitter);
+
+    /* Test on EV6 and clear it */
+    while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED));  
+
+    /* Send the EEPROM's internal address to write to */    
+    I2C_SendData(I2Cx, reg_addr);  
+
+    /* Test on EV8 and clear it */
+    while(! I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
+
+    /* While there is data to be written */
+    while(length--)  
+    {
+    /* Send the current byte */
+    I2C_SendData(I2Cx, *data); 
+
+    /* Point to the next byte to be written */
+    data++; 
+
+    /* Test on EV8 and clear it */
+    while (!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
+    }
+
+    /* Send STOP condition */
+    I2C_GenerateSTOP(I2Cx, ENABLE);
+}
+
+void IIC_Read_Buffer(unsigned char slave_addr, unsigned char reg_addr, unsigned char length, unsigned char *data)
 {
     //*((u8 *)0x4001080c) |=0x80; 
     while(I2C_GetFlagStatus(I2Cx, I2C_FLAG_BUSY)); 
@@ -86,7 +134,7 @@ void IIC_Read_Buffer(u8 ReadAddr, u8* pBuffer, u8 NumByteToRead)
     while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_MODE_SELECT));
     
     /* Send EEPROM address for write */
-    I2C_Send7bitAddress(I2Cx, MPU6050_ADDRESS, I2C_Direction_Transmitter);
+    I2C_Send7bitAddress(I2Cx, slave_addr, I2C_Direction_Transmitter);
     
     /* Test on EV6 and clear it */
     while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED));
@@ -95,7 +143,7 @@ void IIC_Read_Buffer(u8 ReadAddr, u8* pBuffer, u8 NumByteToRead)
     I2C_Cmd(I2Cx, ENABLE);
     
     /* Send the EEPROM's internal address to write to */
-    I2C_SendData(I2Cx, ReadAddr);  
+    I2C_SendData(I2Cx, reg_addr);  
 
     /* Test on EV8 and clear it */
     while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
@@ -107,15 +155,15 @@ void IIC_Read_Buffer(u8 ReadAddr, u8* pBuffer, u8 NumByteToRead)
     while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_MODE_SELECT));
 
     /* Send EEPROM address for read */
-    I2C_Send7bitAddress(I2Cx, MPU6050_ADDRESS, I2C_Direction_Receiver);
+    I2C_Send7bitAddress(I2Cx, slave_addr, I2C_Direction_Receiver);
 
     /* Test on EV6 and clear it */
     while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED));
 
     /* While there is data to be read */
-    while(NumByteToRead)  
+    while(length)  
     {
-        if(NumByteToRead == 1)
+        if(length == 1)
         {
             /* Disable Acknowledgement */
             I2C_AcknowledgeConfig(I2Cx, DISABLE);
@@ -128,99 +176,18 @@ void IIC_Read_Buffer(u8 ReadAddr, u8* pBuffer, u8 NumByteToRead)
         if(I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_BYTE_RECEIVED))  
         {      
             /* Read a byte from the EEPROM */
-            *pBuffer = I2C_ReceiveData(I2Cx);
+            *data = I2C_ReceiveData(I2Cx);
 
             /* Point to the next location where the byte read will be saved */
-            pBuffer++; 
+            data++; 
 
             /* Decrement the read bytes counter */
-            NumByteToRead--;        
+            length--;        
         }   
     }
 
     /* Enable Acknowledgement to be ready for another reception */
     I2C_AcknowledgeConfig(I2Cx, ENABLE);
-}
-
-void IIC_Write(u8 WriteAddr, u8 Buffer)
-{
-    while(I2C_GetFlagStatus(I2Cx, I2C_FLAG_BUSY)); 
-
-    /* Send START condition */
-    I2C_GenerateSTART(I2Cx, ENABLE);
-
-    /* Test on EV5 and clear it */
-    while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_MODE_SELECT)); 
-
-    /* Send EEPROM address for write */
-    I2C_Send7bitAddress(I2Cx, MPU6050_ADDRESS, I2C_Direction_Transmitter);
-
-    /* Test on EV6 and clear it */
-    while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED));  
-
-    /* Send the EEPROM's internal address to write to */    
-    I2C_SendData(I2Cx, WriteAddr);  
-
-    /* Test on EV8 and clear it */
-    while(! I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
-
-    /* While there is data to be written */
-    /* Send the current byte */
-    I2C_SendData(I2Cx, Buffer); 
-
-    /* Test on EV8 and clear it */
-    while (!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
-
-    /* Send STOP condition */
-    I2C_GenerateSTOP(I2Cx, ENABLE);
-}
-
-/**
-  * @brief   在EEPROM的一个写循环中可以写多个字节，但一次写入的字节数
-  *          不能超过EEPROM页的大小，AT24C02每页有8个字节
-  * @param   
-  *		@arg pBuffer:缓冲区指针
-  *		@arg WriteAddr:写地址
-  *     @arg NumByteToWrite:写的字节数
-  * @retval  无
-  */
-void IIC_Write_Buffer(u8 WriteAddr, u8 NumByteToWrite, u8* pBuffer)
-{
-    while(I2C_GetFlagStatus(I2Cx, I2C_FLAG_BUSY)); 
-
-    /* Send START condition */
-    I2C_GenerateSTART(I2Cx, ENABLE);
-
-    /* Test on EV5 and clear it */
-    while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_MODE_SELECT)); 
-
-    /* Send EEPROM address for write */
-    I2C_Send7bitAddress(I2Cx, MPU6050_ADDRESS, I2C_Direction_Transmitter);
-
-    /* Test on EV6 and clear it */
-    while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED));  
-
-    /* Send the EEPROM's internal address to write to */    
-    I2C_SendData(I2Cx, WriteAddr);  
-
-    /* Test on EV8 and clear it */
-    while(! I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
-
-    /* While there is data to be written */
-    while(NumByteToWrite--)  
-    {
-    /* Send the current byte */
-    I2C_SendData(I2Cx, *pBuffer); 
-
-    /* Point to the next byte to be written */
-    pBuffer++; 
-
-    /* Test on EV8 and clear it */
-    while (!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
-    }
-
-    /* Send STOP condition */
-    I2C_GenerateSTOP(I2Cx, ENABLE);
 }
 
 /*********************************************END OF FILE**********************/
