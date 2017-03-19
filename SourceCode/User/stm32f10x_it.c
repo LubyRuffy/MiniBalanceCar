@@ -174,7 +174,7 @@ void  TIM6_IRQHandler (void)
         TIM_ClearITPendingBit(TIM6 , TIM_FLAG_Update);
         TIM6_count++;
 
-        if(TIM6_count >= 1)
+        if(TIM6_count >= 5)
         {
             TIM6_count = 0;
             LED1_TOGGLE;
