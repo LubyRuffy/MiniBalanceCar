@@ -15,9 +15,38 @@
 #include "inv_mpu_dmp_motion_driver.h"
 #include "USART1.h"
 #include "math.h"
+#include "string.h"
+
+/* Data requested by client. */
+#define PRINT_ACCEL     (0x01)
+#define PRINT_GYRO      (0x02)
+#define PRINT_QUAT      (0x04)
+
+#define ACCEL_ON        (0x01)
+#define GYRO_ON         (0x02)
+
+#define MOTION          (0)
+#define NO_MOTION       (1)
 
 /* Starting sampling rate. */
 #define DEFAULT_MPU_HZ  (100)
+
+struct rx_s {
+    unsigned char header[3];
+    unsigned char cmd;
+};
+struct hal_s {
+    unsigned char sensors;
+    unsigned char dmp_on;
+    unsigned char wait_for_tap;
+    volatile unsigned char new_gyro;
+    unsigned short report;
+    unsigned short dmp_features;
+    unsigned char motion_int_mode;
+    struct rx_s rx;
+};
+static struct hal_s hal = {0};
+
 
 static signed char gyro_orientation[9] = {-1, 0, 0,
                                            0,-1, 0,
@@ -122,101 +151,80 @@ static inline void run_self_test(void)
 ***************************************************************/
 int MPU6050_Init(void)
 {
-    int result=0;
+    int result;
+    unsigned char accel_fsr;
+    unsigned short gyro_rate, gyro_fsr;
     
-	I2C_GPIO_Config();
+    I2C_GPIO_Config();
     I2C_Mode_Config();
     
-	result = mpu_init();
-	if(!result)
+    result = mpu_init();
+    if(!result)
     {
-        printf("mpu initialization complete......\r\n");		//mpu initialization complete	 	  
+        printf("mpu initialization complete......\r\n");        //mpu initialization complete         
 
-		if(!mpu_set_sensors(INV_XYZ_GYRO | INV_XYZ_ACCEL))		//mpu_set_sensor
-		{
-            printf("mpu_set_sensor complete ......\r\n");
-        }
-		else
-        {
-			printf("mpu_set_sensor come across error ......\r\n");
-            result = 1;
-        }
+        /* Get/set hardware configuration. Start gyro. */
+        /* Wake up all sensors. */
+        mpu_set_sensors(INV_XYZ_GYRO | INV_XYZ_ACCEL);
+        /* Push both gyro and accel data into the FIFO. */
+        mpu_configure_fifo(INV_XYZ_GYRO | INV_XYZ_ACCEL);
+        mpu_set_sample_rate(DEFAULT_MPU_HZ);
+        /* Read back configuration in case it was set improperly. */
+        mpu_get_sample_rate(&gyro_rate);
+        mpu_get_gyro_fsr(&gyro_fsr);
+        mpu_get_accel_fsr(&accel_fsr);
+
+        /* Initialize HAL state variables. */
+        memset(&hal, 0, sizeof(hal));
+        hal.sensors = ACCEL_ON | GYRO_ON;
+        hal.report = PRINT_QUAT;
         
-		if(!mpu_configure_fifo(INV_XYZ_GYRO | INV_XYZ_ACCEL))	//mpu_configure_fifo
-		{
-            printf("mpu_configure_fifo complete ......\r\n");
-        }
-        else
-        {
-			printf("mpu_configure_fifo come across error ......\r\n");
-            result = 1;
-        }
-        
-		if(!mpu_set_sample_rate(DEFAULT_MPU_HZ))	   	  		//mpu_set_sample_rate
-        {		
-            printf("mpu_set_sample_rate complete ......\r\n");
-        }
-		else
-        {
-		 	printf("mpu_set_sample_rate error ......\r\n");
-            result = 1;
-        }
+        /* To initialize the DMP:
+         * 1. Call dmp_load_motion_driver_firmware(). This pushes the DMP image in
+         *    inv_mpu_dmp_motion_driver.h into the MPU memory.
+         * 2. Push the gyro and accel orientation matrix to the DMP.
+         * 3. Register gesture callbacks. Don't worry, these callbacks won't be
+         *    executed unless the corresponding feature is enabled.
+         * 4. Call dmp_enable_feature(mask) to enable different features.
+         * 5. Call dmp_set_fifo_rate(freq) to select a DMP output rate.
+         * 6. Call any feature-specific control functions.
+         *
+         * To enable the DMP, just call mpu_set_dmp_state(1). This function can
+         * be called repeatedly to enable and disable the DMP at runtime.
+         *
+         * The following is a short summary of the features supported in the DMP
+         * image provided in inv_mpu_dmp_motion_driver.c:
+         * DMP_FEATURE_LP_QUAT: Generate a gyro-only quaternion on the DMP at
+         * 200Hz. Integrating the gyro data at higher rates reduces numerical
+         * errors (compared to integration on the MCU at a lower sampling rate).
+         * DMP_FEATURE_6X_LP_QUAT: Generate a gyro/accel quaternion on the DMP at
+         * 200Hz. Cannot be used in combination with DMP_FEATURE_LP_QUAT.
+         * DMP_FEATURE_TAP: Detect taps along the X, Y, and Z axes.
+         * DMP_FEATURE_ANDROID_ORIENT: Google's screen rotation algorithm. Triggers
+         * an event at the four orientations where the screen should rotate.
+         * DMP_FEATURE_GYRO_CAL: Calibrates the gyro data after eight seconds of
+         * no motion.
+         * DMP_FEATURE_SEND_RAW_ACCEL: Add raw accelerometer data to the FIFO.
+         * DMP_FEATURE_SEND_RAW_GYRO: Add raw gyro data to the FIFO.
+         * DMP_FEATURE_SEND_CAL_GYRO: Add calibrated gyro data to the FIFO. Cannot
+         * be used in combination with DMP_FEATURE_SEND_RAW_GYRO.
+         */
+        dmp_load_motion_driver_firmware();
+        dmp_set_orientation(
+        inv_orientation_matrix_to_scalar(gyro_orientation));
+//        dmp_register_tap_cb(tap_cb);
+//        dmp_register_android_orient_cb(android_orient_cb);
+        hal.dmp_features = DMP_FEATURE_6X_LP_QUAT | DMP_FEATURE_TAP |
+        DMP_FEATURE_ANDROID_ORIENT | DMP_FEATURE_SEND_RAW_ACCEL | DMP_FEATURE_SEND_CAL_GYRO |
+        DMP_FEATURE_GYRO_CAL;
+        dmp_enable_feature(hal.dmp_features);
+        dmp_set_fifo_rate(DEFAULT_MPU_HZ);
+        mpu_set_dmp_state(1);
+        hal.dmp_on = 1;
 
-		if(!dmp_load_motion_driver_firmware())   	  			//dmp_load_motion_driver_firmvare
-        {
-			printf("dmp_load_motion_driver_firmware complete ......\r\n");
-        }
-		else
-        {
-			printf("dmp_load_motion_driver_firmware come across error ......\r\n");
-            result = 1;
-        }
-
-		if(!dmp_set_orientation(inv_orientation_matrix_to_scalar(gyro_orientation))) 	  //dmp_set_orientation
-		{
-            printf("dmp_set_orientation complete ......\r\n");
-        }
-		else
-        {
-		 	printf("dmp_set_orientation come across error ......\r\n");
-            result = 1;
-        }
-
-		if(!dmp_enable_feature(DMP_FEATURE_6X_LP_QUAT | DMP_FEATURE_TAP |
-		    DMP_FEATURE_ANDROID_ORIENT | DMP_FEATURE_SEND_RAW_ACCEL | DMP_FEATURE_SEND_CAL_GYRO |
-		    DMP_FEATURE_GYRO_CAL))		   	 					 //dmp_enable_feature
-        {
-		 	printf("dmp_enable_feature complete ......\r\n");
-        }
-		else
-        {
-		 	printf("dmp_enable_feature come across error ......\r\n");
-            result = 1;
-        }
-
-		if(!dmp_set_fifo_rate(DEFAULT_MPU_HZ))   	 			 //dmp_set_fifo_rate
-        {
-		 	printf("dmp_set_fifo_rate complete ......\r\n");
-        }
-		else
-        {
-		 	printf("dmp_set_fifo_rate come across error ......\r\n");
-            result = 1;
-        }
-
-		run_self_test();
-
-		if(!mpu_set_dmp_state(1))
-        {
-		 	PrintChar("mpu_set_dmp_state complete ......\r\n");
-        }
-		else
-        {
-		 	PrintChar("mpu_set_dmp_state come across error ......\r\n");
-            result = 1;
-        }
+        run_self_test();
     }
-    return 0;
+    return result;
 }
 
 /***************************************************************
@@ -229,30 +237,18 @@ int MPU6050_Init(void)
 ***************************************************************/
 void MPU6050_Refresh_Pose(void)
 {
-	
-	dmp_read_fifo(gyro, accel, quat, &sensor_timestamp, &sensors,&more);	 
-	/* Gyro and accel data are written to the FIFO by the DMP in chip frame and hardware units.
-	 * This behavior is convenient because it keeps the gyro and accel outputs of dmp_read_fifo and mpu_read_fifo consistent.
-	**/
-	/*if (sensors & INV_XYZ_GYRO )
-	send_packet(PACKET_TYPE_GYRO, gyro);
-	if (sensors & INV_XYZ_ACCEL)
-	send_packet(PACKET_TYPE_ACCEL, accel); */
-	/* Unlike gyro and accel, quaternions are written to the FIFO in the body frame, q30.
-	 * The orientation is set by the scalar passed to dmp_set_orientation during initialization. 
-	**/
-	if(sensors & INV_WXYZ_QUAT )
-	{
-		q0 = quat[0] / q30;	
-		q1 = quat[1] / q30;
-		q2 = quat[2] / q30;
-		q3 = quat[3] / q30;
+    dmp_read_fifo(gyro, accel, quat, &sensor_timestamp, &sensors,&more);
+    if(sensors & INV_WXYZ_QUAT )
+    {
+        q0 = quat[0] / q30;
+        q1 = quat[1] / q30;
+        q2 = quat[2] / q30;
+        q3 = quat[3] / q30;
 
-		Pitch = asin(-2 * q1 * q3 + 2 * q0* q2)* 57.3;	// pitch
-		Roll  = atan2(2 * q2 * q3 + 2 * q0 * q1, -2 * q1 * q1 - 2 * q2* q2 + 1)* 57.3;	// roll
-		Yaw   = atan2(2*(q1*q2 + q0*q3),q0*q0+q1*q1-q2*q2-q3*q3) * 57.3;	//yaw
-	    //printf("the Pitch is   : %d\r\n",(int)Pitch);
-	}
+        Pitch = asin(-2 * q1 * q3 + 2 * q0* q2)* 57.3;  // pitch
+        //Roll  = atan2(2 * q2 * q3 + 2 * q0 * q1, -2 * q1 * q1 - 2 * q2* q2 + 1)* 57.3;  // roll
+        //Yaw   = atan2(2*(q1*q2 + q0*q3),q0*q0+q1*q1-q2*q2-q3*q3) * 57.3;    //yaw
+    }
 }
 
 /*********************************************END OF FILE**********************/

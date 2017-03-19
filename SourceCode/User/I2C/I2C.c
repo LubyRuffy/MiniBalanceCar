@@ -60,23 +60,23 @@ void I2C_Mode_Config(void)
 
   /* I2C 配置 */
   I2C_InitStructure.I2C_Mode = I2C_Mode_I2C;
-	
-	/* 高电平数据稳定，低电平数据变化 SCL 时钟线的占空比 */
+    
+    /* 高电平数据稳定，低电平数据变化 SCL 时钟线的占空比 */
   I2C_InitStructure.I2C_DutyCycle = I2C_DutyCycle_2;
-	
+    
   I2C_InitStructure.I2C_OwnAddress1 =I2Cx_OWN_ADDRESS7; 
   I2C_InitStructure.I2C_Ack = I2C_Ack_Enable ;
-	
-	/* I2C的寻址模式 */
+    
+    /* I2C的寻址模式 */
   I2C_InitStructure.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
-	
-	/* 通信速率 */
+    
+    /* 通信速率 */
   I2C_InitStructure.I2C_ClockSpeed = I2C_Speed;
   
-	/* I2C1 初始化 */
+    /* I2C1 初始化 */
   I2C_Init(I2Cx, &I2C_InitStructure);
   
-	/* 使能 I2C1 */
+    /* 使能 I2C1 */
   I2C_Cmd(I2Cx, ENABLE);   
 }
 

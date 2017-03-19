@@ -38,7 +38,7 @@ int main(void)
     Encoder_Init_TIM4();
     
     /* 配置SysTick 为1ms中断一次 */
-	SysTick_Init();
+    SysTick_Init();
     Delay_ms(10);
     
     if(MPU6050_Init())
@@ -49,6 +49,7 @@ int main(void)
     {
         TIMER6_Config();
     }
+    
     while(1)
     {
         //printf("{A%d:%d:%d:%d}$",a,b,c,d); 
