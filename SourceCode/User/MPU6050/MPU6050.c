@@ -222,7 +222,7 @@ int MPU6050_Init(void)
         mpu_set_dmp_state(1);
         hal.dmp_on = 1;
 
-        run_self_test();
+        //run_self_test();
     }
     return result;
 }

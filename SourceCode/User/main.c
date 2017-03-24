@@ -18,6 +18,7 @@
 #include "ENCODER.h"
 #include "SysTick.h"
 #include "MPU6050.h"
+#include "Control.h"
 
 /***************************************************************
 * Function name:  main()
@@ -29,16 +30,18 @@
 ***************************************************************/
 int main(void)
 {   
-    LED_GPIO_Config();
+    /* 配置SysTick 为1ms中断一次 */
+    SysTick_Init();
+    
     USART1_Config();
+    LED_GPIO_Config();
+    
+    Encoder_Init_TIM2();            //编码器接口
+    Encoder_Init_TIM4();
+    
     Motor_GPIO_Config();
     Motor_PWM_Config();
     
-    Encoder_Init_TIM2();            //=====编码器接口
-    Encoder_Init_TIM4();
-    
-    /* 配置SysTick 为1ms中断一次 */
-    SysTick_Init();
     Delay_ms(10);
     
     if(MPU6050_Init())
@@ -48,6 +51,11 @@ int main(void)
     else
     {
         TIMER6_Config();
+        PID_INIT();
+    
+        g_fCarSpeedSet = 0;
+        Delay_ms(100);//wait 1 period
+        STBY(1);
     }
     
     while(1)
@@ -58,9 +66,55 @@ int main(void)
         //b对应右边的码盘，通过百分比表示，可以用于速度等状态的显示，范围是0—100（%）；
         //c主要是用于显示电量，范围也是0—100（%）；
         //d是角度值，范围是-180°—180°
-        printf("{A%d:%d:%d:%d}$",0,0,100,(int)(Pitch)); 
-        Delay_ms(10);
-        
+        printf("{A%d:%d:%d:%d}$", (int)(g_fLeft*100), (int)(g_fRight*100), 80,(int)(Pitch)); 
+        //Delay_ms(10);
+        //printf("{B%d:%d:%d}$",(int)(g_fLeft*100), (int)(g_fRight*100), (int)(g_fCarSpeed*100));
+        switch(BUF_RX_CH)
+        {
+            case 'A': 
+                g_fCarSpeedSet = -10;
+                g_fDirectionControlOut = 0;
+                break;
+            case 'B': 
+                g_fCarSpeedSet = -10;
+                g_fDirectionControlOut = 0.15;
+                break;
+            case 'H': 
+                g_fCarSpeedSet = -10;
+                g_fDirectionControlOut = -0.15;
+                break;
+            
+            case 'E': 
+                g_fCarSpeedSet = 10;
+                g_fDirectionControlOut = 0;
+                break;
+            case 'D': 
+                g_fCarSpeedSet = 10;
+                g_fDirectionControlOut = -0.15;
+                break;
+            case 'F': 
+                g_fCarSpeedSet = 10;
+                g_fDirectionControlOut = 0.15;
+                break;
+
+            case 'C':
+                g_fCarSpeedSet = 0;
+                g_fDirectionControlOut = 0.25;
+                break;
+
+            case 'G':
+                g_fCarSpeedSet = 0;
+                g_fDirectionControlOut =  -0.25;
+                break;
+            
+            case 'Z':
+                g_fCarSpeedSet = 0;
+                g_fDirectionControlOut = 0;
+                break;
+            default: 
+                g_fCarSpeedSet = 0;
+                g_fDirectionControlOut = 0;
+        }
     }
 }
 

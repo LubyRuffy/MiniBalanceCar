@@ -30,6 +30,7 @@
 #include "MOTOR.h"
 #include "ENCODER.h"
 #include "MPU6050.h"
+#include "Control.h"
 extern void TimingDelay_Decrement(void);
 
 /** @addtogroup STM32F10x_StdPeriph_Template
@@ -168,20 +169,43 @@ void USART1_IRQHandler(void)
 void  TIM6_IRQHandler (void)
 {
     static u8 TIM6_count=0;
-    
-    if ( TIM_GetITStatus( TIM6, TIM_IT_Update) != RESET ) 
-    {	
+	if ( TIM_GetITStatus( TIM6, TIM_IT_Update) != RESET ) 
+	{	
         TIM_ClearITPendingBit(TIM6 , TIM_FLAG_Update);
         TIM6_count++;
-
-        if(TIM6_count >= 5)
+        
+        SpeedControlOutput();
+        if(TIM6_count >= CONTROL_PERIOD)
         {
             TIM6_count = 0;
-            LED1_TOGGLE;
-            MPU6050_Refresh_Pose();
-            
+            GetMotorPuise();
         }
-	}
+        else if(TIM6_count == 1)
+        {
+            GetAngle();
+        }
+        else if(TIM6_count == 2)
+        {
+            AngleControlOut();
+            MotorOutput();
+        }
+        else if(TIM6_count == 3)
+        {
+            g_nSpeedControlCount++;
+
+            if (g_nSpeedControlCount >= SPEED_CONTROL_COUNT)
+            {
+                g_nSpeedControlCount = 0;
+                g_nSpeedControlPeriod = 0;
+                SpeedControl();
+                LED1_TOGGLE;
+            }
+        }
+        else if (TIM6_count == 4)
+        {
+           
+        }
+    }
 }
 /**
   * @brief  This function handles PPP interrupt request.

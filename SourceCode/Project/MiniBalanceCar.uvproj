@@ -362,7 +362,7 @@
               <MiscControls>--c99</MiscControls>
               <Define>STM32F10X_HD, USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Libraries\CMSIS;..\User;..\Libraries\FWlib\inc;..\User\LED;..\User\USART1;..\User\TIMER6;..\User\MOTOR;..\User\ENCODER;..\User\I2C;..\User\MPU6050;..\User\SysTick</IncludePath>
+              <IncludePath>..\Libraries\CMSIS;..\User;..\Libraries\FWlib\inc;..\User\LED;..\User\USART1;..\User\TIMER6;..\User\MOTOR;..\User\ENCODER;..\User\I2C;..\User\MPU6050;..\User\SysTick;..\User\Control</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -589,6 +589,11 @@
               <FileName>SysTick.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\SysTick\SysTick.c</FilePath>
+            </File>
+            <File>
+              <FileName>Control.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Control\Control.c</FilePath>
             </File>
           </Files>
         </Group>

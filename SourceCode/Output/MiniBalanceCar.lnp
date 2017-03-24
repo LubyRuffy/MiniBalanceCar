@@ -33,6 +33,7 @@
 "..\output\motor.o"
 "..\output\encoder.o"
 "..\output\systick.o"
+"..\output\control.o"
 "..\output\i2c.o"
 "..\output\inv_mpu.o"
 "..\output\inv_mpu_dmp_motion_driver.o"
