@@ -110,7 +110,7 @@ int Read_Encoder(u8 TIMX)
 *  Function name:   TIM4_IRQHandler()
 *  Description:     
 *  Entry:           None
-*
+*  
 *  Returned value:  None
 *  Remark:
 ***************************************************************/
@@ -126,17 +126,16 @@ void TIM4_IRQHandler(void)
 *  Function name:   TIM2_IRQHandler()
 *  Description:     
 *  Entry:           None
-*
+*  
 *  Returned value:  None
 *  Remark:
 ***************************************************************/
 void TIM2_IRQHandler(void)
-{                                   
+{
     if(TIM2->SR&0X0001)//溢出中断
-    {                                                   
-    }                  
-    TIM2->SR&=~(1<<0);//清除中断标志位      
+    {
+    }
+    TIM2->SR&=~(1<<0);//清除中断标志位
 }
-
 
 /*********************************************END OF FILE**********************/
