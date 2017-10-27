@@ -73,47 +73,47 @@ int main(void)
         {
             case 'A': 
                 g_fCarSpeedSet = -10;
-                g_fDirectionControlOut = 0;
+                
                 break;
             case 'B': 
                 g_fCarSpeedSet = -10;
-                g_fDirectionControlOut = 0.15;
+                
                 break;
             case 'H': 
                 g_fCarSpeedSet = -10;
-                g_fDirectionControlOut = -0.15;
+                
                 break;
             
             case 'E': 
                 g_fCarSpeedSet = 10;
-                g_fDirectionControlOut = 0;
+                
                 break;
             case 'D': 
                 g_fCarSpeedSet = 10;
-                g_fDirectionControlOut = -0.15;
+                
                 break;
             case 'F': 
                 g_fCarSpeedSet = 10;
-                g_fDirectionControlOut = 0.15;
+                
                 break;
 
             case 'C':
                 g_fCarSpeedSet = 0;
-                g_fDirectionControlOut = 0.25;
+                
                 break;
 
             case 'G':
                 g_fCarSpeedSet = 0;
-                g_fDirectionControlOut =  -0.25;
+                
                 break;
             
             case 'Z':
                 g_fCarSpeedSet = 0;
-                g_fDirectionControlOut = 0;
+                
                 break;
             default: 
                 g_fCarSpeedSet = 0;
-                g_fDirectionControlOut = 0;
+                
         }
     }
 }

@@ -135,16 +135,44 @@ void Motor_PWM_Config(void)
 ***************************************************************/
 void Motor_driver_out(float LeftVoltage, float RightVoltage)
 {   
+    #define DEAD_VALUE_CLOCKWISE        0.0175
+    #define DEAD_VALUE_ANTI_CLOCKWISE   0.025
+    
+    //LeftVoltage = RightVoltage = 0.001;
+    
     //
-    if(LeftVoltage>0){AIN1(0);AIN2(1);}else{AIN1(1);AIN2(0);  LeftVoltage=-LeftVoltage;}
+    if(LeftVoltage > 0)
+    {
+        AIN1(0);
+        AIN2(1);
+        LeftVoltage += DEAD_VALUE_CLOCKWISE;
+    }
+    else
+    {
+        AIN1(1);
+        AIN2(0);
+        LeftVoltage = -LeftVoltage + DEAD_VALUE_ANTI_CLOCKWISE;
+    }
+    
     //right
-    if(RightVoltage>0){BIN1(1);BIN2(0);}else{BIN1(0);BIN2(1); RightVoltage=-RightVoltage;}
-
+    if(RightVoltage>0)
+    {
+        BIN1(1);
+        BIN2(0);
+        RightVoltage += DEAD_VALUE_ANTI_CLOCKWISE;
+    }
+    else
+    {
+        BIN1(0);
+        BIN2(1);
+        RightVoltage = -RightVoltage + DEAD_VALUE_CLOCKWISE;
+    } 
+    
     if(LeftVoltage  > MOTOR_OUT_MAX){LeftVoltage  = MOTOR_OUT_MAX;}    
     if(RightVoltage > MOTOR_OUT_MAX){RightVoltage = MOTOR_OUT_MAX;}
     
-    TIM3->CCR1=(LeftVoltage  * 720+10);   
-    TIM3->CCR2=(RightVoltage * 720+10); 
+    TIM3->CCR1=(LeftVoltage  * 720);   
+    TIM3->CCR2=(RightVoltage * 720); 
 }
 
 /*********************************************END OF FILE**********************/

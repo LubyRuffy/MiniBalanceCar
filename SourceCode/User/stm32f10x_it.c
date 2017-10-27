@@ -179,6 +179,7 @@ void  TIM6_IRQHandler (void)
         {
             TIM6_count = 0;
             GetMotorPuise();
+            DirectionControlOut();
         }
         else if(TIM6_count == 1)
         {
@@ -192,7 +193,7 @@ void  TIM6_IRQHandler (void)
         else if(TIM6_count == 3)
         {
             g_nSpeedControlCount++;
-
+            
             if (g_nSpeedControlCount >= SPEED_CONTROL_COUNT)
             {
                 g_nSpeedControlCount = 0;

@@ -28,9 +28,8 @@
 #define CAR_SPEED_CONSTANT              1000.0 / SPEED_CONTROL_PERIOD / (float)ENCODE_CONSTANT
 #define CAR_SPEED_SET                   g_fCarSpeedSet //g_Argument.fCarSpeedSet;
 
-#define SPEED_CONTROL_MAX               10
-#define SPEED_CONTROL_OUT_MAX           0.05
-#define SPEED_CONTROL_OUT_MIN           -0.05
+#define SPEED_CONTROL_OUT_MAX           0.1
+#define SPEED_CONTROL_OUT_MIN           -1.0
 /****************************************************/
 #define ZHONGZHI 0
 
@@ -45,6 +44,7 @@ typedef struct PID
 
 extern volatile float  g_f16AngleControlOut;
 extern volatile float  g_fDirectionControlOut;   //×ª½Ç
+extern volatile float  g_fCarDirectionSet;
 
 extern volatile float  g_fCarSpeed;
 extern volatile float  g_fCarSpeedSet;
@@ -74,6 +74,7 @@ void GetMotorPuise(void);
 void BANLANCE_PWM_OUT(float angel);
 
 /*************************************************************************************/
+void DirectionControlOut(void);
 void AngleControlOut(void);
 void SpeedControl(void);
 void SpeedControlOutput(void);

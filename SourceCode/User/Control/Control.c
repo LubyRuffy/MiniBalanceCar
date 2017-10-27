@@ -19,8 +19,10 @@ PID PID_KONGZHI;
 PID PID_Speed;
 
 
+
 volatile float  g_f16AngleControlOut;
 volatile float  g_fDirectionControlOut;   //×ª½Ç
+volatile float  g_fCarDirectionSet = 0;
 
 volatile float  g_fCarSpeed = 0;
 volatile float  g_fCarSpeedSet = 0;
@@ -77,6 +79,11 @@ void GetAngle(void)
     MPU6050_Refresh_Pose();
 }
 
+void DirectionControlOut(void)
+{
+    g_fDirectionControlOut = (g_fCarDirectionSet - Yaw) * 0.01;
+}
+
 void AngleControlOut(void)
 {
     float fValue,fValue1 ;
@@ -110,15 +117,12 @@ void SpeedControl(void)
     
     fP = fDelta * PID_Speed.P;
     fI = fDelta * PID_Speed.I;
-    //------------------------------------------------------------------
-    if(fI < (-SPEED_CONTROL_MAX * PID_Speed.I) || fI > (SPEED_CONTROL_MAX * PID_Speed.I))
-    {
-        fI = 0; 
-    }
+    //--------------------------------------------------------------------------
+    
     //--------------------------------------------------------------------------
     g_fSpeedControlIntegral += fI;
-    //------------------------------------------------------------------
     
+    //--------------------------------------------------------------------------
     if(g_fSpeedControlIntegral > SPEED_CONTROL_OUT_MAX) 
     g_fSpeedControlIntegral = SPEED_CONTROL_OUT_MAX;
     if(g_fSpeedControlIntegral < SPEED_CONTROL_OUT_MIN)     
@@ -147,8 +151,8 @@ void SpeedControlOutput(void)
 
 void MotorOutput(void)
 {
-    g_fLeft  = g_f16AngleControlOut - g_fSpeedControlOut - g_fDirectionControlOut;
-    g_fRight = g_f16AngleControlOut - g_fSpeedControlOut + g_fDirectionControlOut;
+    g_fLeft  = g_f16AngleControlOut - g_fSpeedControlOut + g_fDirectionControlOut;
+    g_fRight = g_f16AngleControlOut - g_fSpeedControlOut - g_fDirectionControlOut;
 
     Motor_driver_out(g_fLeft, g_fRight);            
 }
